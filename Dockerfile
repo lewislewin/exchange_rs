@@ -10,8 +10,8 @@ COPY . .
 # Build the application in release mode
 RUN cargo build --release
 
-# Step 2: Create a minimal runtime image
-FROM debian:buster-slim
+# Step 2: Create a runtime image with updated glibc
+FROM debian:bookworm-slim
 
 # Install necessary dependencies
 RUN apt-get update && apt-get install -y libssl-dev ca-certificates && rm -rf /var/lib/apt/lists/*
