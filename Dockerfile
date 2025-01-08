@@ -1,5 +1,5 @@
 # Step 1: Build the application
-FROM rust:1.74 as builder
+FROM rust:1.83 as builder
 
 # Set the working directory inside the container
 WORKDIR /app
