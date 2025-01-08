@@ -73,7 +73,7 @@ impl OrderBook {
 
 #[derive(Debug)]
 struct StockExchange {
-    order_books: HashMap<String, OrderBook>,
+    order_books: HashMap<String, Arc<Mutex<OrderBook>>>,
 }
 
 impl StockExchange {
@@ -84,7 +84,15 @@ impl StockExchange {
     }
 
     fn place_order(&mut self, order: Order) {
-        let book = self.order_books.entry(order.ticker.clone()).or_insert_with(OrderBook::new);
+        // Get or create the order book for the ticker
+        let book = self
+            .order_books
+            .entry(order.ticker.clone())
+            .or_insert_with(|| Arc::new(Mutex::new(OrderBook::new())))
+            .clone();
+
+        // Lock the order book and process the order
+        let mut book = book.lock().unwrap();
         book.add_order(order);
     }
 }
